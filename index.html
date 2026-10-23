@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#244B3F" />
+<title>拾光 CampusLoop · 校园闲置循环市集</title>
+<style>
+:root {
+  --site-primary: #244B3F;
+  --site-secondary: #C8EE72;
+  --site-background: #F5F6F0;
+  --site-on-primary: #FFFFFF;
+  --site-on-secondary: #1D3327;
+  --site-on-background: #18251F;
+  --site-font-body: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --site-font-heading: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  --ink: #18251F;
+  --muted: #748078;
+  --paper: light-dark(#FFFFFF, #1C2923);
+  --paper-soft: light-dark(#EFF2E9, #24332B);
+  --line: light-dark(#E1E6DC, #35463C);
+  --green: var(--site-primary);
+  --lime: var(--site-secondary);
+  --orange: #F0A16B;
+  --shadow: 0 14px 45px rgba(29, 55, 42, 0.08);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; font-family: var(--site-font-body); color: light-dark(var(--ink), #EDF4EE); background: light-dark(#F5F6F0, #111A15); }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid #90BD45; outline-offset: 3px; }
+a { color: inherit; text-decoration: none; }
+#app { min-height: 100vh; width: 100%; background-color: var(--site-background); color: var(--site-on-background); border-radius: 0; overflow: clip; }
+.wrap { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+.topbar { height: 76px; display: flex; align-items: center; border-bottom: 1px solid var(--line); background: light-dark(rgba(255,255,255,.86), rgba(19,29,23,.9)); position: sticky; top: 0; z-index: 20; backdrop-filter: blur(18px); }
+.navrow { display:flex; align-items:center; justify-content:space-between; gap: 24px; }
+.brand { display:flex; align-items:center; gap: 11px; min-width: 208px; }
+.brandmark { width: 39px; height:39px; border-radius: 13px; background: var(--site-primary); color: var(--site-on-primary); display:grid; place-items:center; box-shadow: inset 0 0 0 1px rgba(255,255,255,.15); }
+.brandmark svg { width:25px; height:25px; }
+.brandname { font-size: 19px; font-weight: 850; letter-spacing: -0.8px; line-height:1.1; }
+.brandname small { display:block; font-size:9px; color:var(--muted); letter-spacing:2.1px; margin-top:4px; font-weight:700; }
+.navlinks { display:flex; align-items:center; gap: 29px; font-size:13px; font-weight:650; color: light-dark(#526159, #B7C8BD); }
+.navlinks a { padding: 10px 0; transition: color .2s; }
+.navlinks a:hover { color: var(--green); }
+.navactions { display:flex; align-items:center; gap:10px; }
+.iconbtn { width:40px; height:40px; border:1px solid var(--line); background:var(--paper); color:inherit; border-radius:13px; display:grid; place-items:center; position:relative; }
+.iconbtn svg { width:18px; height:18px; }
+.countdot { position:absolute; top:-5px; right:-5px; background:#F08E66; color:white; border-radius:20px; min-width:17px; height:17px; display:grid; place-items:center; font-size:10px; border:2px solid var(--paper); padding:0 3px; }
+.btn { border:0; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 17px; border-radius:13px; font-weight:750; font-size:13px; transition: transform .18s, box-shadow .18s, background .18s; white-space:nowrap; }
+.btn:hover { transform: translateY(-2px); }
+.btn-primary { background:var(--site-primary); color:var(--site-on-primary); box-shadow:0 5px 12px rgba(36,75,63,.13); }
+.btn-primary:hover { box-shadow:0 9px 20px rgba(36,75,63,.2); }
+.btn-lime { background:var(--site-secondary); color:var(--site-on-secondary); }
+.btn-soft { background:var(--paper-soft); color:inherit; }
+.btn-outline { background:transparent; border:1px solid var(--line); color:inherit; }
+.btn svg { width:16px; height:16px; }
+.hero { padding: 54px 0 34px; position:relative; }
+.hero-grid { display:grid; grid-template-columns: 1.1fr .9fr; gap: 50px; align-items:center; }
+.eyebrow { display:inline-flex; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:1.6px; color:light-dark(#5A7E53, #B0D68B); font-size:10px; font-weight:850; }
+.eyebrow .spark { width:23px; height:23px; display:grid; place-items:center; background:var(--site-secondary); color:#294534; border-radius:8px; letter-spacing:0; }
+.hero h1 { font-family:var(--site-font-heading); font-size: clamp(42px, 5.1vw, 66px); line-height:1.12; letter-spacing:-2.9px; margin:20px 0 18px; max-width:620px; font-weight:900; }
+.hero h1 em { color:light-dark(#53784B, #C6E981); font-style:normal; position:relative; display:inline-block; }
+.hero h1 em:after { content:""; position:absolute; left:2px; right:2px; bottom:1px; height:9px; background:var(--site-secondary); z-index:0; opacity:.75; transform:rotate(-1.5deg); border-radius:8px; }
+.hero h1 em span { position:relative; z-index:1; }
+.hero-copy { color:light-dark(#657268, #B0BFB5); font-size:15px; line-height:1.9; max-width:520px; }
+.hero-search { display:flex; align-items:center; gap:10px; background:var(--paper); padding:7px; border:1px solid var(--line); border-radius:16px; max-width:570px; margin-top:27px; box-shadow:var(--shadow); }
+.search-ico { width:42px; height:42px; display:grid; place-items:center; color:var(--muted); flex:0 0 auto; }
+.search-ico svg { width:20px; }
+.hero-search input { border:0; outline:0; background:transparent; min-width:0; flex:1; color:inherit; font-size:13px; }
+.hero-search input::placeholder { color:#9AA49B; }
+.hero-search .btn { padding:13px 18px; }
+.quickstats { display:flex; flex-wrap:wrap; align-items:center; gap:25px; margin-top:29px; }
+.quickstat { display:flex; gap:10px; align-items:center; }
+.stat-icon { width:35px; height:35px; border-radius:12px; background:var(--paper-soft); color:var(--green); display:grid; place-items:center; }
+.stat-icon svg { width:17px; }
+.quickstat strong { display:block; font-size:16px; letter-spacing:-.5px; }
+.quickstat span { color:var(--muted); font-size:10px; display:block; margin-top:3px; }
+.hero-art { position:relative; min-height:380px; border-radius:30px; background:var(--site-primary); overflow:hidden; isolation:isolate; box-shadow:0 24px 50px rgba(26,68,51,.16); }
+.art-grid { position:absolute; inset:0; opacity:.12; background-image:linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px); background-size:34px 34px; mask-image:linear-gradient(to bottom right,black,transparent 85%); }
+.art-orb { position:absolute; border:1px solid rgba(255,255,255,.2); border-radius:50%; opacity:calc(.8 * var(--site-decoration-opacity)); }
+.art-orb.one { width:360px; height:360px; right:-95px; top:-110px; }
+.art-orb.two { width:260px; height:260px; right:-45px; top:-60px; }
+.art-tag { position:absolute; left:27px; top:28px; padding:9px 12px; border:1px solid rgba(255,255,255,.25); color:#EAF2E9; background:rgba(255,255,255,.08); border-radius:99px; font-size:10px; letter-spacing:.5px; }
+.art-tag b { color:var(--site-secondary); margin-right:6px; }
+.art-number { position:absolute; right:26px; top:25px; font-size:11px; color:#C6D4C9; letter-spacing:1.5px; }
+.cube-scene { position:absolute; left:10%; right:10%; top:64px; bottom:50px; display:flex; align-items:center; justify-content:center; }
+.item-pedestal { width:250px; height:190px; position:relative; display:flex; align-items:center; justify-content:center; }
+.pedestal-shadow { position:absolute; bottom:18px; left:15px; right:15px; height:30px; background:rgba(0,0,0,.2); filter:blur(13px); border-radius:50%; }
+.pedestal { position:absolute; bottom:28px; width:230px; height:76px; background:#D5E2B0; border-radius:15px; transform:skewY(-7deg); box-shadow:inset 0 -11px 0 rgba(34,65,45,.16); }
+.pedestal:before { content:""; position:absolute; top:-35px; left:0; width:100%; height:45px; border-radius:14px 14px 7px 7px; background:#E7F0D0; transform:skewY(7deg); }
+.pedestal:after { content:""; position:absolute; left:0; right:0; bottom:-20px; height:25px; background:#8BA56D; border-radius:0 0 14px 14px; }
+.floating-product { position:absolute; top:0; z-index:3; width:158px; height:158px; display:grid; place-items:center; font-size:88px; filter:drop-shadow(0 18px 12px rgba(0,0,0,.18)); transform:rotate(-9deg); }
+.float-star { position:absolute; color:var(--site-secondary); font-size:32px; top:30px; left:20px; }
+.float-star.s2 { left:auto; right:14px; top:111px; font-size:19px; color:#F0B18B; }
+.float-label { position:absolute; right:15px; bottom:32px; border-radius:15px; background:var(--site-secondary); color:#203A2B; padding:12px 15px; box-shadow:0 8px 20px rgba(0,0,0,.18); transform:rotate(3deg); }
+.float-label small { font-size:9px; display:block; letter-spacing:1px; font-weight:800; opacity:.75; }
+.float-label strong { font-size:20px; display:block; letter-spacing:-.6px; margin-top:2px; }
+.float-label strong span { font-size:11px; }
+.art-bottom { position:absolute; bottom:0; width:100%; padding:18px 23px; display:flex; align-items:center; justify-content:space-between; color:#EAF2E9; border-top:1px solid rgba(255,255,255,.15); font-size:11px; }
+.art-bottom b { color:var(--site-secondary); font-size:13px; }
+.art-bottom span { color:#BED0C1; }
+.hero-decor { position:absolute; left:-80px; bottom:15px; width:180px; height:180px; border:1px solid rgba(70,104,73,.12); border-radius:50%; pointer-events:none; }
+.notice-strip { display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:15px 12px; color:light-dark(#5B6C5E, #B8C7BB); font-size:11px; background:light-dark(#EFF2E8,#17231C); }
+.notice-strip strong { color:light-dark(#2E5B3D,#D4F18F); }
+.notice-strip .dot { width:4px;height:4px;border-radius:50%;background:#90B965; }
+.section { padding:70px 0; }
+.section-head { display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:27px; }
+.section-kicker { color:light-dark(#6B8B5C,#B0D68B); font-weight:850; font-size:10px; letter-spacing:1.9px; text-transform:uppercase; margin-bottom:11px; }
+.section h2 { font-size: clamp(28px, 3vw, 36px); letter-spacing:-1.4px; line-height:1.2; margin:0; font-weight:880; }
+.section-sub { color:var(--muted); font-size:12px; margin-top:10px; line-height:1.7; }
+.market-layout { display:grid; grid-template-columns: 215px 1fr; gap:26px; align-items:start; }
+.filters { background:var(--paper); border:1px solid var(--line); border-radius:19px; padding:20px; position:sticky; top:96px; }
+.filter-title { display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:800; margin-bottom:17px; }
+.text-button { color:light-dark(#668B4F,#C3E880); border:0; background:transparent; font-weight:750; font-size:11px; padding:0; }
+.filter-label { color:var(--muted); font-weight:800; font-size:10px; text-transform:uppercase; letter-spacing:1.1px; margin:19px 0 10px; }
+.category-list { display:grid; gap:4px; }
+.category-button { width:100%; display:flex; align-items:center; text-align:left; gap:10px; padding:10px 9px; border:0; border-radius:10px; background:transparent; color:inherit; font-size:12px; transition:background .16s; }
+.category-button:hover { background:var(--paper-soft); }
+.category-button.active { background:light-dark(#EAF2DE,#314431); color:light-dark(#2B5536,#D8F59C); font-weight:800; }
+.category-button .emoji { width:20px; font-size:16px; text-align:center; }
+.category-button .qty { margin-left:auto; font-size:10px; color:var(--muted); }
+.checkline { display:flex; align-items:center; gap:8px; font-size:11px; color:light-dark(#606D63,#BECCC1); margin:10px 0; cursor:pointer; }
+.checkline input { accent-color:var(--site-primary); width:14px; height:14px; }
+.price-control { display:flex; gap:7px; }
+.price-control input { width:50%; min-width:0; border:1px solid var(--line); border-radius:9px; background:var(--paper); color:inherit; padding:9px 8px; font-size:11px; }
+.filter-bottom { margin-top:18px; padding-top:17px; border-top:1px solid var(--line); font-size:10px; color:var(--muted); line-height:1.7; }
+.market-main { min-width:0; }
+.market-toolbar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+.result-label { font-size:12px; color:var(--muted); }
+.result-label strong { color:var(--ink); font-size:14px; margin-right:4px; }
+.toolbar-right { display:flex; gap:8px; align-items:center; }
+.sort-select { border:1px solid var(--line); border-radius:11px; background:var(--paper); padding:10px 12px; color:inherit; font-size:11px; }
+.view-btn { width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:var(--paper);display:grid;place-items:center;color:var(--muted); }
+.view-btn.active { background:var(--paper-soft); color:var(--green); }
+.mobile-categories { display:none; }
+.product-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:15px; }
+.product-grid.list-view { grid-template-columns:1fr; }
+.product-card { min-width:0; border:1px solid var(--line); border-radius:18px; background:var(--paper); overflow:hidden; transition:transform .2s, box-shadow .2s, border-color .2s; position:relative; }
+.product-card:hover { transform:translateY(-4px); box-shadow:var(--shadow); border-color:light-dark(#C3D4B8,#587456); }
+.product-grid.list-view .product-card { display:grid; grid-template-columns:170px minmax(0,1fr); }
+.product-grid.list-view .product-image { min-height:185px; height:100%; }
+.product-image { height:176px; position:relative; display:grid; place-items:center; overflow:hidden; isolation:isolate; cursor:pointer; background:var(--product-bg, #E7EEDC); }
+.product-image:before { content:""; position:absolute; width:165px;height:165px;border:1px solid rgba(255,255,255,.48);border-radius:50%; top:18px; left:calc(50% - 82px); z-index:-1; opacity:calc(.7 * var(--site-decoration-opacity)); }
+.product-image:after { content:""; position:absolute; bottom:15px; width:112px;height:20px; background:rgba(31,50,33,.11); filter:blur(8px); border-radius:50%; }
+.product-emoji { position:relative; z-index:1; font-size:76px; filter:drop-shadow(0 12px 7px rgba(36,53,38,.15)); transform:rotate(-5deg); transition:transform .25s; }
+.product-card:hover .product-emoji { transform:rotate(2deg) scale(1.07); }
+.product-badge { position:absolute; top:12px; left:12px; z-index:2; border-radius:7px; padding:6px 8px; font-size:9px; font-weight:850; background:rgba(255,255,255,.83); color:#355740; backdrop-filter:blur(6px); }
+.heart-button { position:absolute; z-index:3; top:10px; right:10px; width:31px;height:31px; display:grid;place-items:center; border:1px solid rgba(255,255,255,.7); border-radius:10px; background:rgba(255,255,255,.82); color:#4C6253; transition:.2s; }
+.heart-button svg { width:16px;height:16px; }
+.heart-button.favorited { background:#FBE7E1; color:#D66753; border-color:#FBE7E1; }
+.product-info { padding:14px 14px 13px; }
+.product-title-row { display:flex; align-items:flex-start; gap:8px; }
+.product-title { font-size:13px; line-height:1.5; font-weight:800; margin:0; flex:1; min-height:39px; cursor:pointer; letter-spacing:-.2px; }
+.condition-dot { flex-shrink:0; width:6px;height:6px;background:#7AA869;border-radius:50%; margin-top:6px; }
+.product-desc { font-size:10px; color:var(--muted); margin-top:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.product-price-row { display:flex; align-items:baseline; gap:5px; margin-top:13px; }
+.product-price { font-size:20px; font-weight:900; letter-spacing:-.8px; color:light-dark(#2E6542,#C8EE72); }
+.product-old-price { color:#A5AEA6; font-size:10px; text-decoration:line-through; }
+.product-meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:9px; color:var(--muted); margin-top:9px; }
+.product-meta span { display:inline-flex;align-items:center;gap:4px; }
+.product-meta svg { width:12px;height:12px; }
+.product-footer { border-top:1px solid var(--line); margin-top:12px; padding-top:10px; display:flex;align-items:center;justify-content:space-between;gap:6px; }
+.seller { display:flex;align-items:center;gap:6px;min-width:0; }
+.avatar { width:25px;height:25px;border-radius:9px;display:grid;place-items:center;background:var(--avatar-bg,#DDE8CE);color:#305640;font-size:10px;font-weight:850;flex-shrink:0; }
+.seller-name { font-size:10px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+.seller-school { color:var(--muted);font-size:9px;margin-top:2px; }
+.add-cart { width:32px;height:32px;border:0;border-radius:10px;background:var(--site-primary);color:white;display:grid;place-items:center;flex-shrink:0;transition:.15s; }
+.add-cart:hover { background:#3E7357; transform:scale(1.05); }
+.add-cart svg { width:16px;height:16px; }
+.empty-state { grid-column:1/-1; text-align:center; border:1px dashed var(--line); border-radius:18px; padding:55px 20px; color:var(--muted); background:var(--paper); }
+.empty-state .big { font-size:42px; margin-bottom:12px; }
+.empty-state strong { display:block;color:var(--ink); margin-bottom:8px; }
+.loadmore { display:flex; justify-content:center; margin-top:25px; }
+.loadmore .btn { min-width:175px; }
+.value-section { background:var(--site-primary); color:white; position:relative; overflow:hidden; }
+.value-section:before { content:""; position:absolute; width:440px;height:440px;right:-130px;top:-250px;border:1px solid rgba(255,255,255,.13);border-radius:50%; box-shadow:0 0 0 45px rgba(255,255,255,.025),0 0 0 90px rgba(255,255,255,.025); opacity:var(--site-decoration-opacity); }
+.value-section .section-kicker { color:var(--site-secondary); }
+.value-section .section-sub { color:#B8CABE; }
+.value-grid { display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;position:relative;z-index:1; }
+.value-section h2 { max-width:480px; }
+.value-section h2 em { font-style:normal;color:var(--site-secondary); }
+.value-list { display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:27px; }
+.value-point { display:flex;gap:11px;align-items:flex-start; }
+.value-point-icon { width:29px;height:29px;border-radius:10px;background:rgba(255,255,255,.1);color:var(--site-secondary);display:grid;place-items:center;flex-shrink:0; }
+.value-point-icon svg { width:15px;height:15px; }
+.value-point b { display:block;font-size:12px;margin-bottom:5px; }
+.value-point span { display:block;color:#B8CABE;font-size:10px;line-height:1.6; }
+.impact-card { background:light-dark(#F9FAF6,#1F2C24);color:var(--ink);border-radius:23px;padding:25px;box-shadow:0 20px 55px rgba(0,0,0,.13); }
+.impact-top { display:flex;align-items:center;justify-content:space-between;gap:10px; }
+.impact-top strong { font-size:13px; }
+.live-pill { background:light-dark(#EAF3DD,#34482F);color:light-dark(#476A3E,#D3F3A1);font-size:9px;padding:6px 9px;border-radius:20px;font-weight:800; }
+.impact-numbers { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0; }
+.impact-number { background:var(--paper-soft);border-radius:14px;padding:16px; }
+.impact-number span { display:block;font-size:10px;color:var(--muted); }
+.impact-number strong { display:block;font-size:29px;letter-spacing:-1.2px;margin:7px 0 4px; }
+.impact-number small { font-size:9px;color:#6B9760; }
+.chart-title { font-size:10px;color:var(--muted);margin-bottom:12px;display:flex;justify-content:space-between; }
+.bar-chart { display:flex;align-items:flex-end;gap:9px;height:85px;padding:0 6px; }
+.bar-col { flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;height:100%; }
+.bar { width:100%;max-width:27px;background:#DCE8CF;border-radius:6px 6px 3px 3px;position:relative;min-height:9px; }
+.bar.highlight { background:#91B967; }
+.bar-col small { color:var(--muted);font-size:8px; }
+.impact-foot { display:flex;align-items:center;gap:9px;background:var(--paper-soft);border-radius:11px;padding:11px;margin-top:17px;color:var(--muted);font-size:10px; }
+.impact-foot b { color:var(--ink); }
+.community-section { padding:67px 0; }
+.community-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:25px; }
+.community-card { border:1px solid var(--line);border-radius:19px;background:var(--paper);padding:21px;min-height:195px;display:flex;flex-direction:column;align-items:flex-start;transition:transform .2s; }
+.community-card:hover { transform:translateY(-3px); }
+.community-icon { width:42px;height:42px;border-radius:14px;background:var(--icon-bg,#EAF0E0);display:grid;place-items:center;font-size:20px;margin-bottom:16px; }
+.community-card h3 { font-size:15px;margin:0 0 7px;letter-spacing:-.3px; }
+.community-card p { color:var(--muted);font-size:11px;line-height:1.8;margin:0 0 15px; }
+.community-card button { margin-top:auto; }
+.safety-banner { background:light-dark(#E8EFDC,#25352A);border-radius:19px;padding:21px 25px;display:flex;align-items:center;gap:17px;margin-top:30px; }
+.safety-icon { width:43px;height:43px;display:grid;place-items:center;border-radius:14px;background:var(--site-secondary);color:#2E533A;flex-shrink:0; }
+.safety-icon svg { width:21px;height:21px; }
+.safety-copy { flex:1; }
+.safety-copy strong { display:block;font-size:13px;margin-bottom:5px; }
+.safety-copy span { color:var(--muted);font-size:10px;line-height:1.6; }
+.safety-banner .btn { flex-shrink:0; }
+.footer { background:light-dark(#E9EDE4,#141E18);padding:38px 0 24px;border-top:1px solid var(--line); }
+.footer-top { display:flex;align-items:flex-start;justify-content:space-between;gap:25px;padding-bottom:28px;border-bottom:1px solid var(--line); }
+.footer-about { max-width:320px; }
+.footer-about p { color:var(--muted);font-size:11px;line-height:1.8;margin:12px 0 0; }
+.footer-links { display:flex;gap:45px; }
+.footer-links strong { display:block;font-size:11px;margin-bottom:12px; }
+.footer-links a { display:block;font-size:10px;color:var(--muted);margin:9px 0; }
+.footer-links a:hover { color:var(--green); }
+.footer-bottom { display:flex;justify-content:space-between;align-items:center;gap:15px;padding-top:20px;color:var(--muted);font-size:9px; }
+.footer-bottom .demo-note { display:inline-flex;align-items:center;gap:6px; }
+.footer-bottom .demo-note:before { content:"";width:6px;height:6px;background:#99BC64;border-radius:50%; }
+/* overlays and forms */
+.overlay { display:none;position:fixed;inset:0;z-index:60;background:rgba(12,24,17,.52);backdrop-filter:blur(6px);padding:20px;align-items:center;justify-content:center; }
+.overlay.open { display:flex; }
+.modal { background:var(--paper);color:var(--ink);border-radius:24px;width:min(660px,100%);max-height:min(88vh,900px);overflow:auto;box-shadow:0 28px 100px rgba(0,0,0,.25);animation:modalIn .2s ease-out; }
+@keyframes modalIn { from{opacity:0;transform:translateY(10px) scale(.99)} to{opacity:1;transform:translateY(0) scale(1)} }
+.modal-head { display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:23px 25px 15px;border-bottom:1px solid var(--line); }
+.modal-head h3 { font-size:21px;margin:0 0 6px;letter-spacing:-.7px; }
+.modal-head p { color:var(--muted);font-size:11px;margin:0;line-height:1.6; }
+.close-button { width:34px;height:34px;border:1px solid var(--line);border-radius:11px;background:var(--paper);color:inherit;display:grid;place-items:center;flex-shrink:0;font-size:19px; }
+.modal-body { padding:23px 25px 25px; }
+.product-detail-layout { display:grid;grid-template-columns: .85fr 1fr;gap:23px; }
+.detail-image { border-radius:17px;min-height:240px;display:grid;place-items:center;font-size:106px;position:relative;overflow:hidden;background:var(--detail-bg,#E9EFDC); }
+.detail-image:after { content:"";position:absolute;width:150px;height:20px;bottom:32px;border-radius:50%;background:rgba(0,0,0,.13);filter:blur(8px); }
+.detail-content { display:flex;flex-direction:column;align-items:flex-start; }
+.detail-tags { display:flex;gap:6px;flex-wrap:wrap; }
+.mini-tag { background:var(--paper-soft);border-radius:7px;padding:6px 8px;font-size:9px;color:var(--muted);font-weight:750; }
+.detail-content h4 { font-size:20px;margin:13px 0 4px;line-height:1.45;letter-spacing:-.6px; }
+.detail-price { font-size:30px;font-weight:900;color:light-dark(#2E6542,#C8EE72);letter-spacing:-1px; }
+.detail-price del { font-size:12px;color:#A3ADA4;font-weight:500;margin-left:6px; }
+.detail-description { color:var(--muted);font-size:11px;line-height:1.85;margin:12px 0; }
+.detail-seller { margin-top:auto;border-top:1px solid var(--line);padding-top:13px;display:flex;align-items:center;gap:9px;width:100%; }
+.detail-seller .avatar { width:35px;height:35px;border-radius:12px; }
+.detail-seller strong { display:block;font-size:11px; }
+.detail-seller small { display:block;color:var(--muted);font-size:9px;margin-top:4px; }
+.detail-actions { display:flex;gap:8px;margin-top:15px;width:100%; }
+.detail-actions .btn { flex:1; }
+.form-grid { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+.field { display:flex;flex-direction:column;gap:7px;min-width:0; }
+.field.full { grid-column:1/-1; }
+.field label { font-weight:800;font-size:11px; }
+.field label span { color:#D8765A; }
+.field input,.field select,.field textarea { width:100%;border:1px solid var(--line);border-radius:11px;padding:12px 13px;background:light-dark(#FBFCF8,#17231B);color:inherit;font-size:12px;outline:none; }
+.field textarea { resize:vertical;min-height:91px;line-height:1.6; }
+.field .hint { color:var(--muted);font-size:9px;line-height:1.5; }
+.form-bottom { display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:21px;padding-top:17px;border-top:1px solid var(--line); }
+.form-bottom small { color:var(--muted);font-size:9px;line-height:1.6;max-width:290px; }
+.upload-placeholder { border:1px dashed light-dark(#B7C9AC,#4A614F);border-radius:12px;background:var(--paper-soft);padding:15px;display:flex;align-items:center;gap:12px; }
+.upload-placeholder .upload-icon { width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:var(--paper);font-size:18px; }
+.upload-placeholder strong { display:block;font-size:11px; }
+.upload-placeholder small { display:block;font-size:9px;color:var(--muted);margin-top:5px; }
+.drawer-wrap { position:fixed;inset:0;z-index:70;background:rgba(12,24,17,.48);display:none; }
+.drawer-wrap.open { display:block; }
+.drawer { position:absolute;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--paper);color:var(--ink);box-shadow:-20px 0 80px rgba(0,0,0,.16);display:flex;flex-direction:column;animation:drawerIn .22s ease-out; }
+@keyframes drawerIn { from{transform:translateX(25px);opacity:.6} to{transform:translateX(0);opacity:1} }
+.drawer-head { padding:23px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line); }
+.drawer-head h3 { margin:0;font-size:20px;letter-spacing:-.5px; }
+.drawer-head p { margin:5px 0 0;font-size:10px;color:var(--muted); }
+.drawer-body { flex:1;overflow:auto;padding:14px 22px; }
+.cart-empty { padding:70px 15px;text-align:center;color:var(--muted); }
+.cart-empty .emoji { font-size:48px;display:block;margin-bottom:13px; }
+.cart-empty strong { color:var(--ink);font-size:14px;display:block;margin-bottom:7px; }
+.cart-row { display:grid;grid-template-columns:68px 1fr auto;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);align-items:center; }
+.cart-thumb { width:68px;height:73px;border-radius:13px;display:grid;place-items:center;font-size:34px;background:var(--thumb-bg,#E8EFDC); }
+.cart-row h4 { margin:0 0 5px;font-size:12px;line-height:1.45; }
+.cart-row .price { font-size:14px;font-weight:900;color:light-dark(#2E6542,#C8EE72); }
+.cart-row .cart-seller { font-size:9px;color:var(--muted);margin-top:5px; }
+.qty-control { display:flex;align-items:center;gap:9px;margin-top:8px; }
+.qty-control button { width:22px;height:22px;border:1px solid var(--line);border-radius:7px;background:var(--paper);color:inherit; }
+.qty-control span { font-size:10px;min-width:10px;text-align:center; }
+.cart-remove { border:0;background:transparent;color:#C77B66;font-size:10px;padding:5px 0; }
+.drawer-foot { padding:19px 22px 24px;border-top:1px solid var(--line);background:var(--paper); }
+.summary-row { display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted);margin:9px 0; }
+.summary-row.total { color:var(--ink);font-weight:850;font-size:13px;padding-top:10px;border-top:1px dashed var(--line); }
+.summary-row.total strong { font-size:23px;letter-spacing:-.7px;color:light-dark(#2E6542,#C8EE72); }
+.drawer-foot .btn { width:100%;margin-top:9px; }
+.toast { position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:100;background:light-dark(#1B2A20,#EAF3DE);color:light-dark(#FFFFFF,#18251F);box-shadow:0 10px 35px rgba(0,0,0,.2);border-radius:13px;padding:13px 17px;display:flex;align-items:center;gap:9px;font-size:12px;font-weight:700;transition:.25s;max-width:calc(100% - 24px); }
+.toast.show { opacity:1;transform:translate(-50%,0); }
+.toast .tick { display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:var(--site-secondary);color:#244B3F; }
+.toast .tick svg { width:12px;height:12px; }
+.guide-step { display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--line); }
+.guide-step:last-child { border-bottom:0; }
+.step-num { width:27px;height:27px;background:var(--paper-soft);color:light-dark(#396143,#D1EF98);border-radius:9px;display:grid;place-items:center;font-size:11px;font-weight:900;flex-shrink:0; }
+.guide-step strong { display:block;font-size:12px;margin:2px 0 5px; }
+.guide-step p { color:var(--muted);font-size:10px;line-height:1.7;margin:0; }
+.order-success { text-align:center;padding:20px 10px 12px; }
+.order-success .success-icon { width:65px;height:65px;border-radius:22px;background:var(--site-secondary);color:var(--green);display:grid;place-items:center;font-size:29px;margin:0 auto 18px; }
+.order-success h3 { margin:0;font-size:22px;letter-spacing:-.7px; }
+.order-success p { font-size:11px;color:var(--muted);line-height:1.8;max-width:360px;margin:10px auto 20px; }
+.order-success .receipt { background:var(--paper-soft);padding:13px;border-radius:12px;text-align:left;font-size:10px;line-height:2;color:var(--muted);max-width:350px;margin:0 auto 20px; }
+.order-success .receipt b { color:var(--ink); }
+.notice-small { background:var(--paper-soft);border-radius:12px;padding:12px;color:var(--muted);font-size:10px;line-height:1.7;margin-top:16px; }
+@media (max-width: 1000px) {
+ .navlinks { gap:16px; }
+ .brand { min-width:170px; }
+ .hero-grid { gap:30px; }
+ .hero-art { min-height:350px; }
+ .product-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .market-layout { grid-template-columns:190px minmax(0,1fr);gap:17px; }
+ .product-image { height:190px; }
+ .footer-links { gap:26px; }
+}
+@media (max-width: 760px) {
+ .wrap { width:calc(100% - 32px); }
+ .topbar { height:66px; }
+ .brand { min-width:0; }
+ .brandname { font-size:17px; }
+ .brandname small { font-size:8px; }
+ .navlinks { display:none; }
+ .navactions { gap:7px; }
+ .navactions .btn { padding:11px 12px; }
+ .hero { padding:35px 0 25px; }
+ .hero-grid { grid-template-columns:1fr;gap:27px; }
+ .hero h1 { font-size:clamp(41px, 11vw, 58px);letter-spacing:-2.4px; }
+ .hero-copy { font-size:13px; }
+ .hero-art { min-height:310px; }
+ .cube-scene { top:51px;bottom:43px; }
+ .hero-decor { display:none; }
+ .quickstats { gap:14px;justify-content:space-between; }
+ .quickstat { gap:7px; }
+ .stat-icon { width:31px;height:31px; }
+ .quickstat strong { font-size:14px; }
+ .quickstat span { font-size:9px; }
+ .notice-strip { font-size:9px;gap:7px;flex-wrap:wrap; }
+ .section { padding:49px 0; }
+ .section-head { align-items:flex-start;flex-direction:column;margin-bottom:20px; }
+ .section-head .btn { align-self:flex-start; }
+ .market-layout { display:block; }
+ .filters { display:none; }
+ .mobile-categories { display:flex;gap:7px;overflow:auto;padding:0 0 12px;margin-bottom:12px;scrollbar-width:none; }
+ .mobile-categories::-webkit-scrollbar { display:none; }
+ .mobile-categories .category-button { width:auto;white-space:nowrap;border:1px solid var(--line);padding:9px 11px;background:var(--paper); }
+ .mobile-categories .category-button.active { border-color:transparent; }
+ .product-grid { gap:10px; }
+ .product-image { height:144px; }
+ .product-emoji { font-size:63px; }
+ .product-info { padding:11px 10px 10px; }
+ .product-title { font-size:11px;min-height:35px; }
+ .product-price { font-size:18px; }
+ .product-meta { gap:6px;font-size:8px; }
+ .seller-name { font-size:9px; }
+ .seller-school { font-size:8px; }
+ .product-footer { margin-top:9px;padding-top:8px; }
+ .product-grid.list-view .product-card { grid-template-columns:115px minmax(0,1fr); }
+ .product-grid.list-view .product-image { min-height:188px; }
+ .value-grid { grid-template-columns:1fr;gap:30px; }
+ .value-list { gap:14px; }
+ .community-grid { grid-template-columns:1fr; }
+ .community-card { min-height:0; }
+ .safety-banner { align-items:flex-start;flex-wrap:wrap;padding:17px; }
+ .safety-copy { min-width:calc(100% - 65px); }
+ .safety-banner .btn { margin-left:60px; }
+ .footer-top { flex-direction:column; }
+ .footer-links { width:100%;justify-content:space-between;gap:15px; }
+ .footer-bottom { flex-direction:column;align-items:flex-start; }
+ .product-detail-layout { grid-template-columns:1fr; }
+ .detail-image { min-height:190px;font-size:88px; }
+ .detail-content h4 { font-size:18px; }
+ .detail-seller { margin-top:16px; }
+ .modal-head { padding:19px 18px 13px; }
+ .modal-body { padding:18px; }
+ .form-grid { grid-template-columns:1fr; }
+ .field.full { grid-column:auto; }
+ .form-bottom { flex-direction:column;align-items:stretch; }
+ .form-bottom .btn { width:100%; }
+ .form-bottom small { max-width:none; }
+}
+@media (max-width: 380px) {
+ .wrap { width:calc(100% - 24px); }
+ .brandmark { width:34px;height:34px; }
+ .brandname { font-size:15px; }
+ .navactions .iconbtn { width:35px;height:35px; }
+ .navactions .btn { font-size:11px;padding:10px; }
+ .product-image { height:125px; }
+ .product-emoji { font-size:54px; }
+ .product-badge { font-size:8px;padding:5px 6px; }
+ .product-meta span:last-child { display:none; }
+ .quickstats { gap:9px; }
+ .quickstat { gap:5px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="wrap navrow">
+      <a class="brand" href="#home" aria-label="拾光 CampusLoop 首页">
+        <span class="brandmark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20c-4.8-2.2-7.5-5.4-7.5-9.4A4.6 4.6 0 0 1 9.1 6c1.3 0 2.3.6 2.9 1.7C12.6 6.6 13.6 6 14.9 6a4.6 4.6 0 0 1 4.6 4.6c0 4-2.7 7.2-7.5 9.4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 18V10m0 4-3-2m3 4 3-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+        <span class="brandname">拾光 CampusLoop<small>YOUR CAMPUS, CIRCULATE</small></span>
+      </a>
+      <nav class="navlinks" aria-label="主导航">
+        <a href="#market">逛逛市集</a><a href="#impact">循环价值</a><a href="#community">校园玩法</a>
+      </nav>
+      <div class="navactions">
+        <button class="iconbtn" id="favoriteNav" aria-label="查看收藏" title="我的收藏"><svg viewBox="0 0 24 24" fill="none"><path d="M20.8 8.8c0 5.1-8.8 10-8.8 10S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.6a4.5 4.5 0 0 1 8.8 2.2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><span class="countdot" id="favoriteCount">0</span></button>
+        <button class="iconbtn" id="cartNav" aria-label="打开购物袋" title="购物袋"><svg viewBox="0 0 24 24" fill="none"><path d="M5 8.5h14l1 12H4l1-12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 9V6a3 3 0 0 1 6 0v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span class="countdot" id="cartCount">0</span></button>
+        <button class="btn btn-primary" id="openPublish"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>发布闲置</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-decor" aria-hidden="true"></div>
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow"><span class="spark">✳</span> CAMPUS SECOND-HAND MARKET</div>
+          <h1>让闲置重新<br><em><span>发光发热。</span></em></h1>
+          <p class="hero-copy">毕业季没带走的显示器、只用过一次的拍立得、囤多了的专业书……在校园里，让好物找到下一位主人。省一点预算，也给地球减一点负担。</p>
+          <form class="hero-search" id="searchForm" role="search">
+            <span class="search-ico"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.3 4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            <input id="heroSearch" aria-label="搜索校园好物" placeholder="搜搜看：高数教材、机械键盘、台灯…" />
+            <button class="btn btn-lime" type="submit">发现好物 <span>↗</span></button>
+          </form>
+          <div class="quickstats">
+            <div class="quickstat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 0 2.1-5.4L4 9m0-5v5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div><div><strong id="heroListingCount">1,268+</strong><span>已上架好物</span></div></div>
+            <div class="quickstat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M16 20v-1.7a3.3 3.3 0 0 0-3.3-3.3H6.3A3.3 3.3 0 0 0 3 18.3V20m6.5-9a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm6-6.6a3.5 3.5 0 0 1 0 6.8m2.7 4.1a3.3 3.3 0 0 1 2.8 3.2V20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div><div><strong>3,420+</strong><span>校园循环搭子</span></div></div>
+            <div class="quickstat"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-3.8 7-10V5l-7-2-7 2v6c0 6.2 7 10 7 10Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><strong>100% 校园</strong><span>优先线下当面交易</span></div></div>
+          </div>
+        </div>
+        <div class="hero-art" aria-label="校园好物循环主题插画">
+          <div class="art-grid"></div><div class="art-orb one"></div><div class="art-orb two"></div>
+          <div class="art-tag"><b>✳</b> THIS WEEK'S LOOP PICK</div><div class="art-number">NO. 026 / FINDS</div>
+          <div class="cube-scene"><span class="float-star">✳</span><span class="float-star s2">✦</span><div class="item-pedestal"><div class="pedestal-shadow"></div><div class="pedestal"></div><div class="floating-product">🎧</div></div><div class="float-label"><small>GOOD FIND · 好物推荐</small><strong>¥ 89<span>.00</span></strong></div></div>
+          <div class="art-bottom"><div><b>耳机不闲置计划</b><br><span>好东西，值得被继续使用</span></div><span>↗ 一件物品 · 两段故事</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="notice-strip"><span>✦</span> <strong>校园优先</strong><span class="dot"></span> 同校当面验货更安心 <span class="dot"></span> 支持闲置交换 <span class="dot"></span> <strong>拒绝浪费，从一件好物开始</strong></div>
+
+    <section class="section" id="market">
+      <div class="wrap">
+        <div class="section-head"><div><div class="section-kicker">THE CAMPUS LOOP MARKET</div><h2>今日好物，等你接棒。</h2><p class="section-sub">二手不是将就，是刚刚好的价值再发现。也欢迎转让全新未拆封、买了却用不上的宝藏。</p></div><button class="btn btn-outline" id="publishFromMarket">＋ 上架我的闲置</button></div>
+        <div class="market-layout">
+          <aside class="filters" aria-label="商品筛选">
+            <div class="filter-title">筛选好物 <button class="text-button" id="resetFilters">重置</button></div>
+            <div class="filter-label">商品分类</div>
+            <div class="category-list" id="desktopCategories"></div>
+            <div class="filter-label">物品状态</div>
+            <label class="checkline"><input type="checkbox" id="filterNew" /> 全新 / 未拆封</label>
+            <label class="checkline"><input type="checkbox" id="filterPickup" /> 支持校内面交</label>
+            <div class="filter-label">预算范围（元）</div>
+            <div class="price-control"><input type="number" id="minPrice" placeholder="最低价" min="0" aria-label="最低价"/><input type="number" id="maxPrice" placeholder="最高价" min="0" aria-label="最高价"/></div>
+            <button class="btn btn-primary" id="applyFilters" style="width:100%;margin-top:12px;padding:10px">应用筛选</button>
+            <div class="filter-bottom">💡 小提示：线下交易请选择人多、明亮的公共区域；先验货，再确认。</div>
+          </aside>
+          <div class="market-main">
+            <div class="mobile-categories" id="mobileCategories" aria-label="商品分类"></div>
+            <div class="market-toolbar"><div class="result-label"><strong id="resultCount">12</strong><span id="resultCaption">件好物正在寻找新主人</span></div><div class="toolbar-right"><select class="sort-select" id="sortSelect" aria-label="商品排序"><option value="recommended">为你推荐</option><option value="newest">最新发布</option><option value="priceAsc">价格从低到高</option><option value="priceDesc">价格从高到低</option></select><button class="view-btn active" id="gridView" title="网格视图" aria-label="网格视图"><svg viewBox="0 0 24 24" width="16" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/></svg></button><button class="view-btn" id="listView" title="列表视图" aria-label="列表视图"><svg viewBox="0 0 24 24" width="16" fill="none"><path d="M9 5h12M9 12h12M9 19h12M3 5h.01M3 12h.01M3 19h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></div></div>
+            <div class="product-grid" id="productGrid" aria-live="polite"></div>
+            <div class="loadmore"><button class="btn btn-soft" id="showAllButton">看看全部好物 <span>↓</span></button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section value-section" id="impact">
+      <div class="wrap value-grid">
+        <div><div class="section-kicker">SMALL ACTION, REAL IMPACT</div><h2>省下来的不只是钱。<br>还有 <em>被重新使用的价值。</em></h2><p class="section-sub">每一次转让，都在减少重复购买。让大学校园成为一座更聪明、更可持续的微型循环经济实验场。</p>
+          <div class="value-list">
+            <div class="value-point"><span class="value-point-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 4.5 7v5c0 4.8 3.2 7.8 7.5 9 4.3-1.2 7.5-4.2 7.5-9V7L12 3Z" stroke="currentColor" stroke-width="1.7"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><div><b>同校交易，更有温度</b><span>优先约校园公共区域面交，沟通成本更低。</span></div></div>
+            <div class="value-point"><span class="value-point-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 7.5 12 3 4 7.5v9L12 21l8-4.5v-9Z" stroke="currentColor" stroke-width="1.7"/><path d="m4.5 7.8 7.5 4.3 7.5-4.3M12 12v8.5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><div><b>闲置流转，减少浪费</b><span>给物品第二次机会，让资源利用率更高。</span></div></div>
+            <div class="value-point"><span class="value-point-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><div><b>看得见的价值数据</b><span>用成交、节省金额等指标理解循环经济。</span></div></div>
+            <div class="value-point"><span class="value-point-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-3.8 7-10V5l-7-2-7 2v6c0 6.2 7 10 7 10Z" stroke="currentColor" stroke-width="1.7"/><path d="M12 7v9m-3-6 3-3 3 3" stroke="currentColor" stroke-width="1.7"/></svg></span><div><b>培养数字经济思维</b><span>从定价、供需到信任机制，练习真实商业逻辑。</span></div></div>
+          </div>
+        </div>
+        <div class="impact-card"><div class="impact-top"><strong>🌱 CampusLoop 循环观察站</strong><span class="live-pill">● 演示数据</span></div>
+          <div class="impact-numbers"><div class="impact-number"><span>社区累计节省金额</span><strong id="savedMoney">¥ 86,420</strong><small>↗ 好物继续发挥价值</small></div><div class="impact-number"><span>估算避免碳排放</span><strong id="savedCarbon">1.28 t</strong><small>↗ 循环利用小小贡献</small></div></div>
+          <div class="chart-title"><span>每月闲置流转指数</span><span>近 6 个月 ↗</span></div><div class="bar-chart" aria-label="近六个月流转数据演示图"><div class="bar-col"><div class="bar" style="height:35%"></div><small>5月</small></div><div class="bar-col"><div class="bar" style="height:48%"></div><small>6月</small></div><div class="bar-col"><div class="bar" style="height:43%"></div><small>7月</small></div><div class="bar-col"><div class="bar" style="height:66%"></div><small>8月</small></div><div class="bar-col"><div class="bar" style="height:80%"></div><small>9月</small></div><div class="bar-col"><div class="bar highlight" style="height:100%"></div><small>10月</small></div></div>
+          <div class="impact-foot"><span style="font-size:18px">♻️</span><span><b>数据说明：</b>页面指标为用于展示的模拟数据，实际业务需基于真实订单和经核验的碳排放系数计算。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="community-section" id="community">
+      <div class="wrap"><div class="section-kicker">MORE THAN A MARKETPLACE</div><div class="section-head" style="margin-bottom:0"><div><h2>校园生活，不止买与卖。</h2><p class="section-sub">把交易做得更有趣，也把校园连接得更紧密。</p></div></div>
+        <div class="community-grid">
+          <article class="community-card"><div class="community-icon" style="--icon-bg:#F7EAD9">🔁</div><h3>以物换物 · Swap Corner</h3><p>用你用不上的好物，换一件正需要的东西。价值不只由价格决定。</p><button class="text-button" data-guide="swap">看看交换小贴士 ↗</button></article>
+          <article class="community-card"><div class="community-icon" style="--icon-bg:#E4EBFA">📚</div><h3>专业书接力计划</h3><p>让高数、计量经济学、Python 教材继续陪伴下一届同学，少花冤枉钱。</p><button class="text-button" data-category="books">逛逛学习资料 ↗</button></article>
+          <article class="community-card"><div class="community-icon" style="--icon-bg:#E8EED8">🎓</div><h3>毕业季轻装行动</h3><p>行李箱装不下的台灯、小家电和收纳用品，也许正是新生的开学刚需。</p><button class="text-button" data-guide="graduation">查看毕业季指南 ↗</button></article>
+        </div>
+        <div class="safety-banner"><div class="safety-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 4.5 6.5v5.7c0 4.3 3.1 7.3 7.5 8.8 4.4-1.5 7.5-4.5 7.5-8.8V6.5L12 3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.7 12 2.1 2.1 4.5-4.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="safety-copy"><strong>第一次交易？先读这份「安心交易守则」</strong><span>不要提前转账或泄露验证码；优先选择校内人流充足的公共场所；当面验货，双方确认后再完成交易。</span></div><button class="btn btn-primary" id="openSafety">交易安全指南 ↗</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="wrap"><div class="footer-top"><div class="footer-about"><a class="brand" href="#home"><span class="brandmark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20c-4.8-2.2-7.5-5.4-7.5-9.4A4.6 4.6 0 0 1 9.1 6c1.3 0 2.3.6 2.9 1.7C12.6 6.6 13.6 6 14.9 6a4.6 4.6 0 0 1 4.6 4.6c0 4-2.7 7.2-7.5 9.4Z" stroke="currentColor" stroke-width="1.7"/><path d="M12 18V10m0 4-3-2m3 4 3-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="brandname">拾光 CampusLoop<small>YOUR CAMPUS, CIRCULATE</small></span></a><p>为校园年轻人打造的闲置循环市集。让每一份被遗忘的价值，再次被看见。</p></div><div class="footer-links"><div><strong>逛逛平台</strong><a href="#market">发现好物</a><a href="#impact">循环价值</a><a href="#community">校园玩法</a></div><div><strong>交易帮助</strong><a href="javascript:void(0)" data-guide="safety">安心交易守则</a><a href="javascript:void(0)" data-guide="sell">如何发布闲置</a><a href="javascript:void(0)" data-guide="pricing">如何合理定价</a></div><div><strong>关于拾光</strong><a href="javascript:void(0)" data-guide="about">项目理念</a><a href="javascript:void(0)" data-guide="economy">数字经济实践</a><a href="javascript:void(0)" data-guide="feedback">意见反馈</a></div></div></div><div class="footer-bottom"><span>© 2026 CampusLoop 拾光 · 为校园循环经济而设计</span><span class="demo-note">当前为可交互前端演示，商品与数据为模拟内容</span></div></div></footer>
+</div>
+
+<!-- Product details modal -->
+<div class="overlay" id="productOverlay" role="dialog" aria-modal="true" aria-labelledby="detailTitle"><div class="modal"><div class="modal-head"><div><h3>好物详情</h3><p>看清状态、问清细节，再决定要不要接棒。</p></div><button class="close-button" data-close="productOverlay" aria-label="关闭">×</button></div><div class="modal-body" id="productDetail"></div></div></div>
+
+<!-- Publish modal -->
+<div class="overlay" id="publishOverlay" role="dialog" aria-modal="true" aria-labelledby="publishTitle"><div class="modal"><div class="modal-head"><div><h3 id="publishTitle">让闲置重新发光 ✳</h3><p>发布一件物品，只需一分钟。描述真实一点，更容易遇见合适的新主人。</p></div><button class="close-button" data-close="publishOverlay" aria-label="关闭">×</button></div><div class="modal-body"><form id="publishForm"><div class="form-grid"><div class="field full"><label for="listingTitle">物品名称 <span>*</span></label><input id="listingTitle" name="title" required maxlength="48" placeholder="例如：九成新罗技无线鼠标" /></div><div class="field"><label for="listingCategory">选择分类 <span>*</span></label><select id="listingCategory" name="category" required><option value="tech">数码好物</option><option value="books">书籍资料</option><option value="dorm">宿舍生活</option><option value="life">生活好物</option><option value="sports">运动户外</option><option value="other">其他宝藏</option></select></div><div class="field"><label for="listingCondition">物品状态 <span>*</span></label><select id="listingCondition" name="condition" required><option value="二手·近全新">二手 · 近全新</option><option value="二手·使用良好">二手 · 使用良好</option><option value="全新未拆封">全新未拆封</option><option value="二手·有使用痕迹">二手 · 有使用痕迹</option></select></div><div class="field"><label for="listingPrice">转让价格（元）<span>*</span></label><input id="listingPrice" name="price" type="number" min="0" step="0.5" required placeholder="给它一个合理价格" /></div><div class="field"><label for="listingOriginal">原价（元，可选）</label><input id="listingOriginal" name="original" type="number" min="0" step="0.5" placeholder="不清楚可不填" /></div><div class="field full"><label for="listingDescription">物品描述 <span>*</span></label><textarea id="listingDescription" name="description" required maxlength="320" placeholder="购入时间、使用频率、功能是否正常、瑕疵细节、是否支持面交……说清楚更容易成交。"></textarea><span class="hint">请勿填写电话、宿舍门牌等敏感个人信息。实际平台上线时可增加图片上传与审核。</span></div><div class="field full"><label for="listingCampus">校区 / 交易地点</label><input id="listingCampus" name="campus" maxlength="40" placeholder="例如：东区图书馆门口（建议选择公共区域）" /></div><div class="field full"><div class="upload-placeholder"><div class="upload-icon">📷</div><div><strong>商品图片位 · 演示版用图标代替</strong><small>正式上线可接入图片上传、压缩与内容审核服务。</small></div></div></div></div><div class="form-bottom"><small>提交后会立即加入当前演示页面，不会上传到真实服务器。请确保物品描述真实、合法合规。</small><button class="btn btn-primary" type="submit">发布这件好物 ↗</button></div></form></div></div></div>
+
+<!-- Cart drawer -->
+<div class="drawer-wrap" id="cartDrawer"><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle"><div class="drawer-head"><div><h3 id="cartTitle">我的好物袋 🛍</h3><p>先收藏心动，再约个校园面交。</p></div><button class="close-button" id="closeCart" aria-label="关闭购物袋">×</button></div><div class="drawer-body" id="cartItems"></div><div class="drawer-foot" id="cartFoot"></div></aside></div>
+
+<!-- Guide modal -->
+<div class="overlay" id="guideOverlay" role="dialog" aria-modal="true" aria-labelledby="guideTitle"><div class="modal"><div class="modal-head"><div><h3 id="guideTitle">校园交易指南</h3><p>让好物流转，也让每一次交易更安心。</p></div><button class="close-button" data-close="guideOverlay" aria-label="关闭">×</button></div><div class="modal-body" id="guideContent"></div></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="tick"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span id="toastText">操作成功</span></div>
+
+<script>
+(() => {
+  'use strict';
+  const CATEGORIES = [
+    {id:'all', name:'全部好物', emoji:'✳'},
+    {id:'tech', name:'数码好物', emoji:'🎧'},
+    {id:'books', name:'书籍资料', emoji:'📚'},
+    {id:'dorm', name:'宿舍生活', emoji:'🪴'},
+    {id:'life', name:'生活好物', emoji:'☕'},
+    {id:'sports', name:'运动户外', emoji:'🏸'},
+    {id:'other', name:'其他宝藏', emoji:'🎁'}
+  ];
+  const seedProducts = [
+    {id:1,title:'罗技 Pebble 无线鼠标',category:'tech',price:49,original:99,condition:'二手·近全新',badge:'人气好物',emoji:'🖱️',bg:'#E5EED9',desc:'只用来上课做笔记，静音按键，功能完好。',seller:'林同学',school:'经管学院 · 大三',campus:'一食堂门口',pickup:true,views:132,likes:26,created:12,avatar:'林',avatarBg:'#DDE8CC',detail:'买来搭配平板做课堂笔记，后来换了触控板。滚轮、蓝牙连接正常，附接收器。适合图书馆、自习室使用。'},
+    {id:2,title:'《计量经济学基础》教材',category:'books',price:26,original:58,condition:'二手·使用良好',badge:'专业课必备',emoji:'📚',bg:'#F1E5D4',desc:'重点章节有少量笔记，内页完整无缺。',seller:'周学姐',school:'数字经济 · 大四',campus:'图书馆南门',pickup:true,views:89,likes:18,created:11,avatar:'周',avatarBg:'#F0DFCA',detail:'数字经济、经济学专业课程参考教材。少量铅笔划线和重点标记，不影响阅读；无缺页、无进水。希望能传给需要的同学。'},
+    {id:3,title:'复古风桌面氛围灯',category:'dorm',price:35,original:79,condition:'二手·近全新',badge:'宿舍氛围感',emoji:'💡',bg:'#F3E4CC',desc:'暖光三档调节，搬宿舍轻装出清。',seller:'阿沐',school:'设计学院 · 大二',campus:'生活区快递站旁',pickup:true,views:116,likes:34,created:10,avatar:'沐',avatarBg:'#E8D2B8',detail:'暖光很适合睡前阅读，三档亮度调节，USB供电。购入后一直爱惜使用，灯体无明显划痕，送一根备用数据线。'},
+    {id:4,title:'索尼 WH-CH720N 降噪耳机',category:'tech',price:289,original:699,condition:'二手·使用良好',badge:'大额省钱',emoji:'🎧',bg:'#E1E9F3',desc:'降噪、蓝牙正常，耳罩已清洁消毒。',seller:'陈同学',school:'计算机学院 · 大四',campus:'创新楼一楼大厅',pickup:true,views:205,likes:41,created:9,avatar:'陈',avatarBg:'#DAE5F1',detail:'功能正常，蓝牙连接稳定，续航表现正常。耳罩已清洁；外壳有轻微使用痕迹，可现场试听和验货。因升级设备转出。'},
+    {id:5,title:'《Python 数据分析》学习用书',category:'books',price:18,original:45,condition:'二手·使用良好',badge:'数字技能',emoji:'🐍',bg:'#DDECDD',desc:'附少量代码笔记，适合零基础入门。',seller:'赵同学',school:'数字经济 · 大二',campus:'经管楼大厅',pickup:true,views:74,likes:12,created:8,avatar:'赵',avatarBg:'#CFE5CE',detail:'适合刚开始接触 Python 数据分析的同学，涵盖基础语法、数据处理与可视化。书角轻微折痕，代码示例完整。'},
+    {id:6,title:'全新未拆封 Type-C 扩展坞',category:'tech',price:79,original:129,condition:'全新未拆封',badge:'全新转让',emoji:'🔌',bg:'#E8E6F3',desc:'买错接口规格，包装完好，型号见详情。',seller:'小郑',school:'信息学院 · 大三',campus:'二食堂入口',pickup:true,views:97,likes:20,created:7,avatar:'郑',avatarBg:'#E1D9F2',detail:'购入后发现自己的设备接口不适配，没有拆封。适用于支持 Type-C 视频输出的设备，具体接口需求建议面交前确认。'},
+    {id:7,title:'折叠收纳脏衣篮',category:'dorm',price:12,original:29,condition:'二手·近全新',badge:'宿舍刚需',emoji:'🧺',bg:'#E9E4D8',desc:'可折叠省空间，换季整理宿舍很方便。',seller:'可可',school:'外国语学院 · 大二',campus:'北区宿舍公共大厅',pickup:true,views:61,likes:9,created:6,avatar:'可',avatarBg:'#EFE0CE',detail:'浅米色折叠设计，尺寸适合宿舍床边收纳，使用时间不长，清洁后转出。'},
+    {id:8,title:'全新便携咖啡随行杯',category:'life',price:22,original:49,condition:'全新未拆封',badge:'拆封未使用',emoji:'☕',bg:'#F0DFD3',desc:'买一送一活动囤多了，带滤网设计。',seller:'Mia',school:'商学院 · 大三',campus:'校咖啡厅外侧',pickup:true,views:82,likes:17,created:5,avatar:'M',avatarBg:'#EDD5C4',detail:'随行杯带可拆卸滤网，适合茶饮和咖啡。全新未拆封，因活动买多了所以转出。请按实际容量和颜色现场确认。'},
+    {id:9,title:'羽毛球拍双拍套装',category:'sports',price:65,original:159,condition:'二手·使用良好',badge:'运动搭子',emoji:'🏸',bg:'#E2EEDC',desc:'两支球拍加拍套，约球新手友好。',seller:'阿杰',school:'体育学院 · 大二',campus:'体育馆东门',pickup:true,views:110,likes:22,created:4,avatar:'杰',avatarBg:'#D3E8D0',detail:'双拍套装，适合宿舍同学约球。拍框有正常使用痕迹，无明显裂纹；可约在体育馆现场查看。'},
+    {id:10,title:'人体工学笔记本电脑支架',category:'tech',price:32,original:69,condition:'二手·近全新',badge:'效率提升',emoji:'💻',bg:'#DFE8E9',desc:'高度可调，写代码和做表格更舒服。',seller:'吴同学',school:'数字经济 · 大三',campus:'教学楼 A 座大厅',pickup:true,views:146,likes:29,created:3,avatar:'吴',avatarBg:'#D0E1E2',detail:'铝合金材质，可调节高度，适合笔记本学习、编程和长时间办公。底部防滑垫齐全，无明显变形。'},
+    {id:11,title:'全新帆布托特包',category:'life',price:19,original:39,condition:'全新未拆封',badge:'全新未用',emoji:'👜',bg:'#F0E8D5',desc:'社团活动礼品多出一只，简约百搭。',seller:'小雨',school:'新闻学院 · 大一',campus:'校门咖啡店旁',pickup:true,views:53,likes:8,created:2,avatar:'雨',avatarBg:'#E8DEC6',detail:'全新帆布袋，适合装课本、平板和日常杂物。社团活动礼品重复，未使用。'},
+    {id:12,title:'迷你桌面绿植 + 陶盆',category:'dorm',price:15,original:32,condition:'二手·使用良好',badge:'治愈系',emoji:'🪴',bg:'#DCE9D7',desc:'宿舍窗边养护，附简单照料卡片。',seller:'小树',school:'环境学院 · 大三',campus:'绿荫广场',pickup:true,views:68,likes:14,created:1,avatar:'树',avatarBg:'#CDE1C8',detail:'绿植状态良好，附陶盆和养护说明。适合窗边散射光环境；交易时建议自带袋子，避免运输中弄洒土壤。'}
+  ];
+  const state = {products:[], favorites:[], cart:{}, category:'all', search:'', newOnly:false, pickupOnly:false, minPrice:'', maxPrice:'', sort:'recommended', listView:false, favoritesOnly:false, toastTimer:null};
+  function loadSaved() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem('campusloop-state') || 'null');
+      if (parsed && Array.isArray(parsed.products) && parsed.products.length) state.products = parsed.products;
+      else state.products = seedProducts.map(x=>({...x}));
+      if (parsed && Array.isArray(parsed.favorites)) state.favorites=parsed.favorites;
+      if (parsed && parsed.cart && typeof parsed.cart==='object') state.cart=parsed.cart;
+    } catch (_) { state.products=seedProducts.map(x=>({...x})); }
+  }
+  function save() {
+    try { localStorage.setItem('campusloop-state', JSON.stringify({products:state.products, favorites:state.favorites, cart:state.cart})); } catch (_) {}
+  }
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+  const money = n => Number(n).toLocaleString('zh-CN',{maximumFractionDigits:2});
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const iconHeart = filled => `<svg viewBox="0 0 24 24" fill="${filled?'currentColor':'none'}"><path d="M20.8 8.8c0 5.1-8.8 10-8.8 10S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.6a4.5 4.5 0 0 1 8.8 2.2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`;
+  const iconCart = `<svg viewBox="0 0 24 24" fill="none"><path d="M5 8.5h14l1 12H4l1-12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 9V6a3 3 0 0 1 6 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+  function showToast(msg) {
+    $('#toastText').textContent=msg; $('#toast').classList.add('show');
+    clearTimeout(state.toastTimer); state.toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),2600);
+  }
+  function openOverlay(id) { $('#'+id).classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeOverlay(id) { $('#'+id).classList.remove('open'); if (!$('.overlay.open') && !$('#cartDrawer').classList.contains('open')) document.body.style.overflow=''; }
+  function openCart() { renderCart(); $('#cartDrawer').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeCart() { $('#cartDrawer').classList.remove('open'); if (!$('.overlay.open')) document.body.style.overflow=''; }
+  function categoryHtml(active, mobile=false) {
+    return CATEGORIES.map(c=>{
+      const count = c.id==='all' ? state.products.length : state.products.filter(p=>p.category===c.id).length;
+      return `<button class="category-button ${active===c.id?'active':''}" data-category="${c.id}" ${mobile?'tabindex="0"':''}><span class="emoji">${c.emoji}</span><span>${c.name}</span>${!mobile?`<span class="qty">${count}</span>`:''}</button>`;
+    }).join('');
+  }
+  function renderCategories() {
+    $('#desktopCategories').innerHTML=categoryHtml(state.category);
+    $('#mobileCategories').innerHTML=categoryHtml(state.category,true);
+  }
+  function filteredProducts() {
+    let items=[...state.products];
+    if (state.favoritesOnly) items=items.filter(p=>state.favorites.includes(p.id));
+    if (state.category!=='all') items=items.filter(p=>p.category===state.category);
+    const q=state.search.trim().toLowerCase();
+    if (q) items=items.filter(p=>[p.title,p.desc,p.description,p.seller,p.school,CATEGORIES.find(c=>c.id===p.category)?.name].join(' ').toLowerCase().includes(q));
+    if (state.newOnly) items=items.filter(p=>p.condition.includes('全新'));
+    if (state.pickupOnly) items=items.filter(p=>p.pickup);
+    if (state.minPrice!=='') items=items.filter(p=>Number(p.price)>=Number(state.minPrice));
+    if (state.maxPrice!=='') items=items.filter(p=>Number(p.price)<=Number(state.maxPrice));
+    if (state.sort==='newest') items.sort((a,b)=>(b.created||0)-(a.created||0));
+    else if (state.sort==='priceAsc') items.sort((a,b)=>a.price-b.price);
+    else if (state.sort==='priceDesc') items.sort((a,b)=>b.price-a.price);
+    else items.sort((a,b)=>(b.likes||0)-(a.likes||0));
+    return items;
+  }
+  function productCard(p) {
+    const fav=state.favorites.includes(p.id);
+    const cat=CATEGORIES.find(c=>c.id===p.category)?.name||'其他宝藏';
+    return `<article class="product-card" data-product-card="${p.id}">
+      <div class="product-image" data-detail="${p.id}" style="--product-bg:${esc(p.bg||'#E5EED9')}">
+        <span class="product-badge">${esc(p.badge||(p.condition.includes('全新')?'全新转让':cat))}</span>
+        <button class="heart-button ${fav?'favorited':''}" data-favorite="${p.id}" aria-label="${fav?'取消收藏':'收藏'} ${esc(p.title)}">${iconHeart(fav)}</button>
+        <span class="product-emoji" aria-hidden="true">${esc(p.emoji||'🎁')}</span>
+      </div>
+      <div class="product-info">
+        <div class="product-title-row"><h3 class="product-title" data-detail="${p.id}">${esc(p.title)}</h3><span class="condition-dot" title="状态信息已填写"></span></div>
+        <div class="product-desc">${esc(p.desc||p.description||'校园好物，欢迎沟通')}</div>
+        <div class="product-price-row"><span class="product-price">¥${money(p.price)}</span>${p.original&&p.original>p.price?`<span class="product-old-price">¥${money(p.original)}</span>`:''}</div>
+        <div class="product-meta"><span>◷ ${esc(p.condition.replace('二手·',''))}</span><span>↗ ${esc(p.campus||'校内面交')}</span></div>
+        <div class="product-footer"><div class="seller"><span class="avatar" style="--avatar-bg:${esc(p.avatarBg||'#DDE8CC')}">${esc(p.avatar||p.seller.slice(0,1))}</span><div style="min-width:0"><div class="seller-name">${esc(p.seller)}</div><div class="seller-school">${esc(p.school||'校园用户')}</div></div></div><button class="add-cart" data-addcart="${p.id}" aria-label="将${esc(p.title)}加入好物袋" title="加入好物袋">${iconCart}</button></div>
+      </div></article>`;
+  }
+  function renderProducts() {
+    renderCategories();
+    const items=filteredProducts();
+    $('#resultCount').textContent=items.length;
+    $('#resultCaption').textContent=state.favoritesOnly?'件已收藏的好物':(state.search?'件搜索结果':'件好物正在寻找新主人');
+    $('#productGrid').classList.toggle('list-view',state.listView);
+    $('#productGrid').innerHTML=items.length?items.map(productCard).join(''):`<div class="empty-state"><div class="big">${state.favoritesOnly?'♡':'🔎'}</div><strong>${state.favoritesOnly?'这里还没有收藏好物':'没找到符合条件的宝藏'}</strong><span>${state.favoritesOnly?'看到喜欢的物品，点一下爱心就能收藏。':'试试换个关键词、放宽价格范围，或者重置筛选条件。'}</span><div style="margin-top:17px"><button class="btn btn-soft" id="emptyReset">重置筛选</button></div></div>`;
+    $('#showAllButton').style.display=(state.category==='all'&&!state.search&&!state.favoritesOnly&&!state.newOnly&&!state.pickupOnly&&!state.minPrice&&!state.maxPrice&&items.length===state.products.length)?'none':'inline-flex';
+    $('#favoriteCount').textContent=state.favorites.length;
+    $('#cartCount').textContent=Object.values(state.cart).reduce((sum,n)=>sum+Number(n||0),0);
+    $('#heroListingCount').textContent=(1268+Math.max(0,state.products.length-seedProducts.length)).toLocaleString('zh-CN')+'+';
+  }
+  function findProduct(id) { return state.products.find(p=>p.id===Number(id)); }
+  function renderDetail(p) {
+    if (!p) return;
+    const cat=CATEGORIES.find(c=>c.id===p.category)?.name||'其他宝藏';
+    $('#productDetail').innerHTML=`<div class="product-detail-layout"><div class="detail-image" style="--detail-bg:${esc(p.bg||'#E9EFDC')}"><span style="position:relative;z-index:1;filter:drop-shadow(0 12px 8px rgba(0,0,0,.12))">${esc(p.emoji||'🎁')}</span></div><div class="detail-content"><div class="detail-tags"><span class="mini-tag">${esc(cat)}</span><span class="mini-tag">${esc(p.condition)}</span>${p.pickup?'<span class="mini-tag">校内面交</span>':''}</div><h4 id="detailTitle">${esc(p.title)}</h4><div class="detail-price">¥${money(p.price)} ${p.original&&p.original>p.price?`<del>¥${money(p.original)}</del>`:''}</div><p class="detail-description">${esc(p.detail||p.desc||'欢迎联系卖家了解物品详情。')}<br><br>📍 建议地点：${esc(p.campus||'校内公共区域')}<br>👀 浏览 ${p.views||0} · ♡ ${p.likes||0}</p><div class="detail-seller"><span class="avatar" style="--avatar-bg:${esc(p.avatarBg||'#DDE8CC')}">${esc(p.avatar||p.seller.slice(0,1))}</span><div><strong>${esc(p.seller)}</strong><small>${esc(p.school||'校园用户')} · 校园演示身份</small></div><span style="margin-left:auto;color:#6A965C;font-size:10px;font-weight:800">● 校园优先</span></div><div class="detail-actions"><button class="btn btn-primary" data-addcart="${p.id}">加入好物袋</button><button class="btn btn-outline" data-contact="${p.id}">联系卖家</button></div></div></div><div class="notice-small">⚠️ 本页面为前端作品演示，卖家身份、浏览量与商品信息均为虚构示例。正式交易前请核验实物与信息；不要在站外提前转账。</div>`;
+    openOverlay('productOverlay');
+  }
+  function addToCart(id) {
+    const p=findProduct(id); if(!p) return;
+    state.cart[id]=(Number(state.cart[id])||0)+1; save(); renderProducts(); renderCart(); showToast('已把「'+p.title+'」放进好物袋');
+  }
+  function toggleFavorite(id) {
+    id=Number(id); const p=findProduct(id); if(!p) return;
+    if(state.favorites.includes(id)){state.favorites=state.favorites.filter(x=>x!==id);showToast('已取消收藏');}
+    else {state.favorites.push(id);showToast('收藏成功，别忘了回来看看');}
+    save(); renderProducts();
+  }
+  function renderCart() {
+    const entries=Object.entries(state.cart).map(([id,qty])=>({p:findProduct(id),qty:Number(qty)})).filter(x=>x.p&&x.qty>0);
+    const count=entries.reduce((s,x)=>s+x.qty,0), total=entries.reduce((s,x)=>s+x.p.price*x.qty,0);
+    $('#cartCount').textContent=count;
+    if (!entries.length) {
+      $('#cartItems').innerHTML='<div class="cart-empty"><span class="emoji">🛍️</span><strong>好物袋还是空的</strong><span>去市集逛逛，把需要的东西带回宿舍吧。</span><br><button class="btn btn-primary" id="cartBrowse" style="margin-top:18px">去发现好物 ↗</button></div>';
+      $('#cartFoot').innerHTML='<div class="summary-row"><span>小提示</span><span>优先校内面交</span></div><div class="notice-small">添加到好物袋只代表意向，不会锁定商品。建议联系卖家确认物品状态和见面时间。</div>';
+    } else {
+      $('#cartItems').innerHTML=entries.map(({p,qty})=>`<div class="cart-row"><div class="cart-thumb" style="--thumb-bg:${esc(p.bg||'#E8EFDC')}">${esc(p.emoji||'🎁')}</div><div><h4>${esc(p.title)}</h4><div class="price">¥${money(p.price)}</div><div class="cart-seller">${esc(p.seller)} · ${esc(p.campus||'校园面交')}</div><div class="qty-control"><button data-qty="${p.id}" data-delta="-1" aria-label="减少数量">−</button><span>${qty}</span><button data-qty="${p.id}" data-delta="1" aria-label="增加数量">＋</button></div></div><div style="text-align:right"><button class="cart-remove" data-remove="${p.id}">移除</button></div></div>`).join('');
+      $('#cartFoot').innerHTML=`<div class="summary-row"><span>商品件数</span><span>${count} 件</span></div><div class="summary-row total"><span>意向金额</span><strong>¥${money(total)}</strong></div><div class="notice-small">校园闲置多数为单件商品。下单前请与卖家确认是否已售出，并约在校内公共区域面交。</div><button class="btn btn-primary" id="checkoutButton">确认交易意向 <span>↗</span></button><button class="btn btn-soft" id="continueBrowse" style="width:100%;margin-top:8px">继续逛逛</button>`;
+    }
+  }
+  function openPublish() { $('#publishForm').reset(); openOverlay('publishOverlay'); }
+  const guideData = {
+    safety:{title:'安心交易守则',intro:'校园熟人环境也要保留基本安全意识。',steps:[['选择公共地点','尽量约在图书馆入口、食堂大厅、校园服务中心等人流较多的地方。'],['先验货，再确认','当面检查外观、配件和关键功能；数码产品建议现场测试。'],['保护个人信息','不要公开宿舍门牌、身份证、验证码或个人支付信息。'],['拒绝可疑转账','不要为了“留货”“解冻”等理由先转账；遇到异常及时终止交易。']]},
+    sell:{title:'如何发布闲置',intro:'真实、清楚的商品信息，能让好物更快找到下一位主人。',steps:[['起一个清晰标题','品牌、型号、用途写清楚，例如“罗技静音无线鼠标”。'],['如实填写状态','注明购入时间、使用频率、瑕疵、配件与功能情况。'],['定一个合理价格','参考新价、使用时间和同类商品价格，留出适度沟通空间。'],['约好安全面交','使用校内公共区域；正式上线后平台可加入消息与信用机制。']]},
+    pricing:{title:'校园闲置如何定价',intro:'可以把定价当作一次小型的市场分析练习。',steps:[['确定参考价格','先找同型号新品价，再看看类似闲置的挂牌价格。'],['考虑折旧和状态','使用时间、外观磨损、配件完整度都会影响买家愿意支付的价格。'],['了解需求弹性','教材在开学季需求高，桌面小电器在毕业季可能供给更多。'],['设置合理议价空间','不要用虚假的原价制造折扣；描述透明有助于建立信任。']]},
+    swap:{title:'以物换物怎么谈',intro:'价值不一定相同，但双方需求可以互补。',steps:[['说清你能提供什么','写明物品状态、配件和你希望交换的品类。'],['先比较双方需求','不要只比原价，重点是这件物品对双方是否有实际用途。'],['当面检查','交换双方都应查看物品并确认接受状态，再完成交换。']]},
+    graduation:{title:'毕业季轻装行动',intro:'让搬不走的物品在校园里继续发挥价值。',steps:[['提前两周整理','按数码、书籍、生活用品分类，给每件物品拍清楚照片。'],['打包成实用组合','教材配课堂笔记、收纳盒配桌面灯，合理组合能降低沟通成本。'],['约好交接时间','毕业离校前预留面交时间，不要在深夜或偏僻区域交接。']]},
+    about:{title:'关于拾光 CampusLoop',intro:'一个把闲置交易、循环经济与校园社区结合起来的数字产品概念。',steps:[['核心用户','在校大学生，特别是需要教材、数码配件、宿舍用品的同学。'],['价值主张','降低找货和沟通成本，让供需双方更高效地交换资源。'],['产品方向','校园身份验证、分类推荐、信用评价、安全交接与循环价值记录。']]},
+    economy:{title:'数字经济专业实践点',intro:'CampusLoop 不只是交易页面，也是一份可讨论的数字商业案例。',steps:[['双边市场与网络效应','商品供给和校园买家互相促进；用户增加可提升匹配机会。'],['数据驱动运营','可分析搜索词、浏览到收藏转化、分类供需、成交周期与价格分布。'],['信任机制设计','校园验证、真实评价、争议处理与隐私保护共同影响交易成本。'],['循环经济指标','统计二次流转数量和节省金额；碳减排估算需有明确方法与可信系数。']]},
+    feedback:{title:'意见反馈',intro:'这是课堂实战的前端演示页面，以下为可继续迭代的方向。',steps:[['功能建议','可继续开发站内私信、身份认证、举报、交易评价与订单管理。'],['设计迭代','可做校园品牌主题、深色模式、移动端发布流程与无障碍优化。'],['技术上线','正式版本需要后端 API、数据库、图片存储、身份验证和部署环境。']]}
+  };
+  function openGuide(key) {
+    const data=guideData[key]||guideData.safety;
+    $('#guideTitle').textContent=data.title;
+    $('#guideContent').innerHTML=`<p style="color:var(--muted);font-size:11px;line-height:1.8;margin:0 0 12px">${esc(data.intro)}</p>${data.steps.map((step,i)=>`<div class="guide-step"><div class="step-num">${String(i+1).padStart(2,'0')}</div><div><strong>${esc(step[0])}</strong><p>${esc(step[1])}</p></div></div>`).join('')}${key==='economy'?'<div class="notice-small">适合写入实战报告的指标：日活跃用户、发布转化率、搜索无结果率、平均议价次数、成交率、复购率与用户留存。所有数据应说明口径并保护隐私。</div>':''}`;
+    openOverlay('guideOverlay');
+  }
+  function resetFilters() {
+    state.category='all';state.search='';state.newOnly=false;state.pickupOnly=false;state.minPrice='';state.maxPrice='';state.favoritesOnly=false;state.sort='recommended';
+    $('#heroSearch').value='';$('#filterNew').checked=false;$('#filterPickup').checked=false;$('#minPrice').value='';$('#maxPrice').value='';$('#sortSelect').value='recommended';
+    renderProducts();
+  }
+
+  $('#searchForm').addEventListener('submit', e=>{e.preventDefault();state.search=$('#heroSearch').value;state.favoritesOnly=false;renderProducts();$('#market').scrollIntoView({behavior:'smooth'});});
+  $('#heroSearch').addEventListener('input',()=>{ if (!$('#heroSearch').value.trim()) {state.search='';renderProducts();} });
+  $('#desktopCategories').addEventListener('click', e=>{const b=e.target.closest('[data-category]');if(!b)return;state.category=b.dataset.category;state.favoritesOnly=false;renderProducts();});
+  $('#mobileCategories').addEventListener('click', e=>{const b=e.target.closest('[data-category]');if(!b)return;state.category=b.dataset.category;state.favoritesOnly=false;renderProducts();});
+  $('#productGrid').addEventListener('click', e=>{
+    const fav=e.target.closest('[data-favorite]'); if(fav){e.stopPropagation();toggleFavorite(fav.dataset.favorite);return;}
+    const add=e.target.closest('[data-addcart]');if(add){e.stopPropagation();addToCart(add.dataset.addcart);return;}
+    const detail=e.target.closest('[data-detail]');if(detail){renderDetail(findProduct(detail.dataset.detail));return;}
+    if(e.target.closest('#emptyReset')) resetFilters();
+  });
+  $('#productDetail').addEventListener('click', e=>{
+    const add=e.target.closest('[data-addcart]');if(add){addToCart(add.dataset.addcart);closeOverlay('productOverlay');openCart();return;}
+    const contact=e.target.closest('[data-contact]');if(contact){const p=findProduct(contact.dataset.contact);showToast('演示提示：可在真实版本中与「'+p.seller+'」站内沟通');openGuide('safety');closeOverlay('productOverlay');}
+  });
+  $('#resetFilters').addEventListener('click',resetFilters);
+  $('#applyFilters').addEventListener('click',()=>{state.newOnly=$('#filterNew').checked;state.pickupOnly=$('#filterPickup').checked;state.minPrice=$('#minPrice').value;state.maxPrice=$('#maxPrice').value;state.favoritesOnly=false;renderProducts();});
+  $('#sortSelect').addEventListener('change', e=>{state.sort=e.target.value;renderProducts();});
+  $('#gridView').addEventListener('click',()=>{state.listView=false;$('#gridView').classList.add('active');$('#listView').classList.remove('active');$('#productGrid').classList.remove('list-view');});
+  $('#listView').addEventListener('click',()=>{state.listView=true;$('#listView').classList.add('active');$('#gridView').classList.remove('active');$('#productGrid').classList.add('list-view');});
+  $('#showAllButton').addEventListener('click',()=>{resetFilters();$('#market').scrollIntoView({behavior:'smooth'});});
+  $('#favoriteNav').addEventListener('click',()=>{state.favoritesOnly=true;state.category='all';state.search='';$('#heroSearch').value='';renderProducts();$('#market').scrollIntoView({behavior:'smooth'});});
+  $('#cartNav').addEventListener('click',openCart);$('#closeCart').addEventListener('click',closeCart);
+  $('#cartDrawer').addEventListener('click', e=>{if(e.target===$('#cartDrawer'))closeCart();});
+  $('#cartItems').addEventListener('click',e=>{
+    if(e.target.closest('#cartBrowse')){closeCart();$('#market').scrollIntoView({behavior:'smooth'});return;}
+    const qty=e.target.closest('[data-qty]');if(qty){const id=qty.dataset.qty;state.cart[id]=(Number(state.cart[id])||0)+Number(qty.dataset.delta);if(state.cart[id]<=0)delete state.cart[id];save();renderCart();renderProducts();return;}
+    const remove=e.target.closest('[data-remove]');if(remove){delete state.cart[remove.dataset.remove];save();renderCart();renderProducts();showToast('已从好物袋移除');}
+  });
+  $('#cartFoot').addEventListener('click',e=>{
+    if(e.target.closest('#continueBrowse')){closeCart();$('#market').scrollIntoView({behavior:'smooth'});return;}
+    if(e.target.closest('#checkoutButton')){
+      const entries=Object.entries(state.cart).map(([id,qty])=>({p:findProduct(id),qty:Number(qty)})).filter(x=>x.p&&x.qty>0);
+      const total=entries.reduce((s,x)=>s+x.p.price*x.qty,0); if(!entries.length)return;
+      $('#guideTitle').textContent='交易意向已记录';
+      $('#guideContent').innerHTML=`<div class="order-success"><div class="success-icon">✓</div><h3>意向确认成功！</h3><p>这只是前端交互演示：没有真实支付、不会扣款，也不会通知真实卖家。接下来在真实平台中，应先联系卖家确认库存、物品状态和面交时间。</p><div class="receipt"><div>意向商品：<b>${entries.length} 种 / ${entries.reduce((s,x)=>s+x.qty,0)} 件</b></div><div>演示金额：<b>¥${money(total)}</b></div><div>交接方式：<b>建议校内公共区域面交</b></div><div>订单状态：<b>待与卖家确认（模拟）</b></div></div><button class="btn btn-primary" id="finishDemoOrder">完成演示</button></div>`;
+      openOverlay('guideOverlay'); closeCart();
+    }
+  });
+  $('#guideContent').addEventListener('click',e=>{if(e.target.closest('#finishDemoOrder')){state.cart={};save();renderCart();renderProducts();closeOverlay('guideOverlay');showToast('演示流程已完成');}});
+  $('#openPublish').addEventListener('click',openPublish);$('#publishFromMarket').addEventListener('click',openPublish);
+  $('#publishForm').addEventListener('submit',e=>{
+    e.preventDefault();const fd=new FormData(e.currentTarget);const title=String(fd.get('title')||'').trim();const price=Number(fd.get('price'));
+    if(!title||!Number.isFinite(price)||price<0){showToast('请检查必填内容和价格');return;}
+    const condition=String(fd.get('condition'));const category=String(fd.get('category'));const campus=String(fd.get('campus')||'校内公共区域').trim();
+    const bgByCat={tech:'#E1E9F3',books:'#F1E5D4',dorm:'#DCE9D7',life:'#F0DFD3',sports:'#E2EEDC',other:'#E9E4F3'};
+    const emojiByCat={tech:'🎧',books:'📚',dorm:'🪴',life:'☕',sports:'🏸',other:'🎁'};
+    const p={id:Date.now(),title,category,price,original:Number(fd.get('original'))||0,condition,badge:condition.includes('全新')?'全新转让':'同学转出',emoji:emojiByCat[category],bg:bgByCat[category],desc:String(fd.get('description')).trim().slice(0,65),detail:String(fd.get('description')).trim(),seller:'我',school:'校园体验账号',campus,pickup:true,views:0,likes:0,created:Date.now(),avatar:'我',avatarBg:'#C8EE72'};
+    state.products.unshift(p);save();resetFilters();closeOverlay('publishOverlay');renderProducts();showToast('发布成功！这件好物已加入演示市集');$('#market').scrollIntoView({behavior:'smooth'});
+  });
+  $('#openSafety').addEventListener('click',()=>openGuide('safety'));
+  document.addEventListener('click',e=>{
+    const close=e.target.closest('[data-close]');if(close){closeOverlay(close.dataset.close);return;}
+    const guide=e.target.closest('[data-guide]');if(guide){e.preventDefault();openGuide(guide.dataset.guide);return;}
+    const category=e.target.closest('[data-category]');if(category && !$('#desktopCategories').contains(category) && !$('#mobileCategories').contains(category)){state.category=category.dataset.category;state.favoritesOnly=false;renderProducts();$('#market').scrollIntoView({behavior:'smooth'});}
+  });
+  $$('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeOverlay(o.id);}));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){ $$('.overlay.open').forEach(o=>closeOverlay(o.id));closeCart();}});
+  loadSaved();renderProducts();renderCart();
+})();
+</script>
+</body>
+</html>
